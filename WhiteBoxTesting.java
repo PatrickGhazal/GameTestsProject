@@ -1,5 +1,6 @@
 package game.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -36,6 +37,7 @@ public class WhiteBoxTesting {
 	public void test() {
 		testOverMethod();
 		testReplayMethod();
+		testToStringMethod();
 	}
 	
 	/* Testing a simple boolean input verifier with condition coverage
@@ -87,24 +89,38 @@ public class WhiteBoxTesting {
 		returnedReplay = game.replay(oneElementList);
 		assertFalse(returnedReplay);
 		
-		/* pass a single valid move, loop is entered but not the if, code jumps to return true
-		 * with the used stubs for Board, this test case cannot actually be done unless we force the result
+		/* 
+		 * Pass a single valid move, for loop is entered but not the if, code jumps to return true
+		 * Reusing the generic Move and List from above
+		 * Given the depth of the stack call when calling replay, the Move is 'forced' as valid by forcing the
+		 * result of the deeply-nested Board.fits(int, Piece, int, int) method.
 		 */
 		
+		Board.returnedByFits = true;
+		returnedReplay = game.replay(oneElementList);
+		assertTrue(returnedReplay);
+	}
+	 
+	@Test
+	public void testToStringMethod() {
 		
+		Game game = new Game();
 		
+		// has no moves
+		String toStrMsg = game.toString(), expectedMsg = "# moves : 0";
+		assertEquals(toStrMsg, expectedMsg);
 		
+		// has one move
+		game.moves.add(new Move(0));
+		toStrMsg = game.toString();
+		expectedMsg = "# moves : 1\nsuccess";
+		assertEquals(toStrMsg, expectedMsg);
 	}
 	
-	private boolean replayForceResult(boolean desiredResult, List<Move> moves, Game game) {
-		boolean replayResult = game.replay(moves);
-		if (replayResult) {
-			return replayResult;
-		} else {
-			return desiredResult;
-		}
+	@Test
+	public void testPlayMethod() {
+		
 	}
-	
 	
 
 }
