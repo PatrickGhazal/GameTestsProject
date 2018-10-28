@@ -88,7 +88,7 @@ public class WhiteBoxTesting {
 		 * Given the depth of the stack call when calling replay, the Move is 'forced' as valid by forcing the
 		 * result of the deeply-nested Board.fits(int, Piece, int, int) method.
 		 */
-		Board.setFitsReturn(true);
+		Board.setReturn(true);
 		returnedReplay = game.replay(oneElementList);
 		assertTrue(returnedReplay);
 	}
@@ -113,6 +113,22 @@ public class WhiteBoxTesting {
 	public void testPlayMethod() {
 		
 		Game game = new Game();
+		
+		Move genericMove = new Move(0);
+		
+		// invalid move, play returns false
+		Board.setReturn(false);
+		boolean playResult = game.play(genericMove);
+		assertFalse(playResult);
+		
+		// valid move, play historizes the move and returns true
+		Move specificMove = new Move(2);
+		Board.setReturn(true);
+		int sizeOfListBeforeAdd = game.moves.size();
+		playResult = game.play(specificMove);
+		assertTrue(playResult);
+		assertEquals(game.moves.size(), sizeOfListBeforeAdd + 1);
+		
 		
 	}
 	
