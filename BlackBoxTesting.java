@@ -17,11 +17,6 @@ public class BlackBoxTesting {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	@Test
-	public void test() {
-		testWinnerMethod();
-	}
 	
 	@Test
 	public void testWinnerMethod() {

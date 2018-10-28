@@ -32,13 +32,6 @@ public class WhiteBoxTesting {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	@Test
-	public void test() {
-		testOverMethod();
-		testReplayMethod();
-		testToStringMethod();
-	}
 	
 	/* Testing a simple boolean input verifier with condition coverage
 	 * Each of the four booleans needs to be true at least once and false at least once
@@ -95,8 +88,7 @@ public class WhiteBoxTesting {
 		 * Given the depth of the stack call when calling replay, the Move is 'forced' as valid by forcing the
 		 * result of the deeply-nested Board.fits(int, Piece, int, int) method.
 		 */
-		
-		Board.returnedByFits = true;
+		Board.setFitsReturn(true);
 		returnedReplay = game.replay(oneElementList);
 		assertTrue(returnedReplay);
 	}
@@ -119,6 +111,8 @@ public class WhiteBoxTesting {
 	
 	@Test
 	public void testPlayMethod() {
+		
+		Game game = new Game();
 		
 	}
 	
