@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.scoutant.blokish.model.Game;
-import org.scoutant.blokish.model.Move;
 
 public class BlackBoxTesting {
 

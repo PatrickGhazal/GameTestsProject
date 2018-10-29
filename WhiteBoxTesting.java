@@ -13,8 +13,12 @@ import org.junit.Test;
 import org.scoutant.blokish.model.Board;
 import org.scoutant.blokish.model.Game;
 import org.scoutant.blokish.model.Move;
+import org.scoutant.blokish.model.Piece;
+import org.scoutant.blokish.model.Square;
 
 public class WhiteBoxTesting {
+	
+	Game game;
 	
 	/*
 	 * Lists of methods to test :
@@ -31,16 +35,16 @@ public class WhiteBoxTesting {
 
 	@After
 	public void tearDown() throws Exception {
+		game = null;
 	}
 	
 	/* Testing a simple boolean input verifier with condition coverage
 	 * Each of the four booleans needs to be true at least once and false at least once
 	 */
-	
 	@Test
 	public void testOverMethod() {
 		
-		Game game = new Game();
+		game = new Game();
 		
 		// all overs are true
 		for (Board board : game.boards) {
@@ -63,12 +67,13 @@ public class WhiteBoxTesting {
 		
 	}
 
-	// Testing a method where the boolean output depends on the nature of the input list elements
-	
+	/* Testing a method where the boolean output depends on the nature of the input list elements
+	 * with path coverage criterion
+	 */
 	@Test
 	public void testReplayMethod() {
 		
-		Game game = new Game();
+		game = new Game();
 		
 		// pass an empty list of moves, for loop is skipped and code jumps to return true
 		List<Move> emptyList = new ArrayList<Move>();
@@ -93,10 +98,13 @@ public class WhiteBoxTesting {
 		assertTrue(returnedReplay);
 	}
 	 
+	/*
+	 * Testing a toString method with path coverage
+	 */
 	@Test
 	public void testToStringMethod() {
 		
-		Game game = new Game();
+		game = new Game();
 		
 		// has no moves
 		String toStrMsg = game.toString(), expectedMsg = "# moves : 0";
@@ -109,10 +117,13 @@ public class WhiteBoxTesting {
 		assertEquals(toStrMsg, expectedMsg);
 	}
 	
+	/*
+	 * Testing the play method with path coverage criteria
+	 */
 	@Test
 	public void testPlayMethod() {
 		
-		Game game = new Game();
+		game = new Game();
 		
 		Move genericMove = new Move(0);
 		
@@ -128,9 +139,42 @@ public class WhiteBoxTesting {
 		playResult = game.play(specificMove);
 		assertTrue(playResult);
 		assertEquals(game.moves.size(), sizeOfListBeforeAdd + 1);
-		
-		
 	}
 	
+	/*
+	 * Testing the ScoreEnemySeedsIfAdding method with branch coverage criteria
+	 */
+	@Test
+	public void testScoreEnSeedsIfAddMethod() {
+		game = new Game();
+		
+		game.boards.add(new Board(0));
+		
+		/* Notes on the method's behaviour:
+		 * The nested for loops located at the beginning and end of the method both use
+		 * harcoded values so they'll be executed regardless of the inputs. To guarantee
+		 * branch coverage, the other two loops need to be passed through at least once.
+		 * We therefore need a Board with at least one Square seed (for the first for),
+		 * and a Piece with at least one Square (for the second for)
+		 */
+		
+		/*
+		 * TC1 : Board and Piece each have one Square, they match so the result == 0
+		 * This test case covers every branch of the code, except the if near the end of the method
+		 * which is covered thanks to T2.
+		 */
+		Square sq = new Square(4, 5);
+		game.boards.get(0).seeds.add(sq);
+		Piece p0 = new Piece(0);
+		p0.list.add(sq);
+		int sesiaResult = game.scoreEnemySeedsIfAdding(0, p0, 0, 0);
+		assertEquals(sesiaResult, 0);
+		
+		/*
+		 * TC2 : Board and Piece each have one Square, they don't match so result == 1
+		 */
+		sesiaResult = game.scoreEnemySeedsIfAdding(0, p0, 0, 1);
+		assertEquals(sesiaResult, 1);
+	}
 
 }
